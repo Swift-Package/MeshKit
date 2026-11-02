@@ -5,28 +5,16 @@ import PackageDescription
 
 let package = Package(
     name: "MeshKit",
+	platforms: [.iOS(.v15), .macOS(.v26), .visionOS(.v26)],
     products: [
-        // Products define the executables and libraries a package produces, making them visible to other packages.
-        .library(
-            name: "MeshKit",
-            targets: ["MeshKit"]
-        ),
+		// MARK: - 用来收敛项目中那些对 FDSMeshLib 库的扩展接口
+        .library(name: "MeshKit", targets: ["MeshKit"]),
+		.library(name: "FDSMeshLib", targets: ["FDSMeshLib"])
     ],
     targets: [
-        // Targets are the basic building blocks of a package, defining a module or a test suite.
-        // Targets can depend on other targets in this package and products from dependencies.
-        .target(
-            name: "MeshKit",
-            swiftSettings: [
-                .enableUpcomingFeature("ApproachableConcurrency"),
-            ],
-        ),
-        .testTarget(
-            name: "MeshKitTests",
-            dependencies: ["MeshKit"],
-            swiftSettings: [
-                .enableUpcomingFeature("ApproachableConcurrency"),
-            ],
-        ),
-    ]
+        .target(name: "MeshKit", dependencies: ["FDSMeshLib"]),
+        .testTarget(name: "MeshKitTests", dependencies: ["MeshKit"]),
+		.binaryTarget(name: "FDSMeshLib", path: "./Sources/FDSMeshLib.xcframework")
+    ],
+	swiftLanguageModes: [.v5]
 )
